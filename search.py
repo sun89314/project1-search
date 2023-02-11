@@ -91,10 +91,10 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(
-        problem.getStartState()))
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(
+    #     problem.getStartState()))
     stack = util.Stack()
     stack.push((problem.getStartState(), []))
     expanded = []
@@ -116,12 +116,44 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    stack = util.Queue()
+    stack.push((problem.getStartState(), []))
+    expanded = []
+    while (stack.isEmpty() == False):
+        node, path = stack.pop()
+        if (problem.isGoalState(node)):
+            # return the ans stack
+            return path
+        if (node not in expanded):
+            expanded.append(node)
+            for state in problem.getSuccessors(node):
+                # print(node, state[0])
+                stack.push((state[0], path + [state[1]]))
+    # print(stack.pop() in expanded)
     util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(
+    #     problem.getStartState()))
+    stack = util.PriorityQueue()
+    stack.push((problem.getStartState(), []), 0)
+    expanded = []
+    while (stack.isEmpty() == False):
+        node, path = stack.pop()
+        if (problem.isGoalState(node)):
+            # return the ans stack
+            return path
+        if (node not in expanded):
+            expanded.append(node)
+            for state in problem.getSuccessors(node):
+                stack.update((state[0], path + [state[1]]),
+                             problem.getCostOfActions(path+[state[1]]))
+    # print(stack.pop() in expanded)
     util.raiseNotDefined()
 
 
@@ -136,6 +168,23 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    stack = util.PriorityQueue()
+    stack.push((problem.getStartState(), [], 0), 0)
+    preSum = 0
+    expanded = []
+    while (stack.isEmpty() == False):
+        node, path, cumulativeCost = stack.pop()
+        if (problem.isGoalState(node)):
+            # return the ans stack
+            return path
+        if (node not in expanded):
+            expanded.append(node)
+            for state in problem.getSuccessors(node):
+                stack.update((state[0], path + [state[1]], cumulativeCost+state[2]),
+                             cumulativeCost+state[2]+heuristic(state[0], problem))
+                # stack.update((state[0], path + [state[1]], cumulativeCost + problem.getCostOfActions(path+[state[1]])),
+                #              cumulativeCost + problem.getCostOfActions(path+[state[1]])+heuristic(node, problem))
+    # print(stack.pop() in expanded)
     util.raiseNotDefined()
 
 
