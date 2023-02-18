@@ -116,19 +116,32 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    # stack = util.Queue()
+    # stack.push((problem.getStartState(), []))
+    # expanded = []
+    # while (stack.isEmpty() == False):
+    #     node, path = stack.pop()
+    #     if (problem.isGoalState(node)):
+    #         # return the ans stack
+    #         return path
+    #     if (node not in expanded):
+    #         expanded.append(node)
+    #         for state in problem.getSuccessors(node):
+    #             # print(node, state[0])
+    #             stack.push((state[0], path + [state[1]]))
     stack = util.Queue()
     stack.push((problem.getStartState(), []))
     expanded = []
     while (stack.isEmpty() == False):
-        node, path = stack.pop()
-        if (problem.isGoalState(node)):
+        state, path = stack.pop()
+        if (problem.isGoalState(state)):
             # return the ans stack
             return path
-        if (node not in expanded):
-            expanded.append(node)
-            for state in problem.getSuccessors(node):
+        if (state not in expanded):
+            expanded.append(state)
+            for successors in problem.getSuccessors(state):
                 # print(node, state[0])
-                stack.push((state[0], path + [state[1]]))
+                stack.push((successors[0], path + [successors[1]]))
     # print(stack.pop() in expanded)
     util.raiseNotDefined()
 
@@ -173,15 +186,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     preSum = 0
     expanded = []
     while (stack.isEmpty() == False):
-        node, path, cumulativeCost = stack.pop()
-        if (problem.isGoalState(node)):
+        state, path, cumulativeCost = stack.pop()
+        if (problem.isGoalState(state)):
             # return the ans stack
             return path
-        if (node not in expanded):
-            expanded.append(node)
-            for state in problem.getSuccessors(node):
-                stack.update((state[0], path + [state[1]], cumulativeCost+state[2]),
-                             cumulativeCost+state[2]+heuristic(state[0], problem))
+        if (state not in expanded):
+            expanded.append(state)
+            for successor in problem.getSuccessors(state):
+                stack.update((successor[0], path + [successor[1]], cumulativeCost+successor[2]),
+                             cumulativeCost+successor[2]+heuristic(successor[0], problem))
                 # stack.update((state[0], path + [state[1]], cumulativeCost + problem.getCostOfActions(path+[state[1]])),
                 #              cumulativeCost + problem.getCostOfActions(path+[state[1]])+heuristic(node, problem))
     # print(stack.pop() in expanded)
